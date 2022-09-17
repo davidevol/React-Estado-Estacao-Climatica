@@ -7,14 +7,6 @@ class App extends React.Component {
 
   constructor(props) {
     super(props)
-    // this.state = {
-    //   latitude: null,
-    //   longitude: null,
-    //   estacao: null,
-    //   data: null,
-    //   icone: null,
-    //   mensagemDeErro: null
-    // }
     console.log('construtor')
   }
 
@@ -30,14 +22,6 @@ class App extends React.Component {
   componentDidMount() {
     this.obterLocalizacao()
   }
-
-  /*   componentDidUpdate(){
-      console.log('componentDidUpdate')
-    }
-  
-    componentWillUnmount(){
-      console.log('componentWillUnmount')
-    } */
 
   obterEstacao = (data, latitude) => {
     const anoAtual = data.getFullYear()
@@ -69,12 +53,10 @@ class App extends React.Component {
 
   obterLocalizacao = () => {
     window.navigator.geolocation.getCurrentPosition(
-      // Callback function
       (posicao) => {
         let data = new Date()
         let estacao = this.obterEstacao(data, posicao.coords.latitude);
         let icone = this.icones[estacao]
-        //console.log(icone)
         this.setState(
           {
             latitude: posicao.coords.latitude,
@@ -92,29 +74,28 @@ class App extends React.Component {
     )
   }
 
-  render() {
-    //console.log('render')
+  render(){
     return (
       <div className="container mt-2">
         <div className="row justify-content-center">
           <div className="col-md-8">
             {
-              (!this.state.latitude && !this.state.mensagemDeErro) ?
-                <Loading 
-                //mensagem="Por favor, responda a localização."
-                />
-              : this.state.mensagemDeErro ?
-                  <p className="border rounded p-2 fs-1 text-center">
-                    É preciso dar permissão para acesso à localização.
-                  </p>
+              !this.state.latitude && !this.state.mensagemDeErro ?
+              <Loading/>
               :
-              <EstacaoClimatica
-               icone={this.state.icone}
-               estacao={this.state.estacao}
-               latitude={this.state.latitude}
-               longitude={this.state.longitude}
-               obterLocalizacao={this.obterLocalizacao}
-              />
+              this.state.mensagemDeErro ?
+              <p className='border rounded p-2 fs-1 text-center'>
+                É preciso dar permissão para acesso à localização.
+                Atualize a página e tente de novo, ajustando a configuração do seu navegador.
+              </p>
+              :
+             <EstacaoClimatica 
+              icone={this.state.icone}
+              estacao={this.state.estacao}
+              latitude={this.state.latitude}
+              longitude={this.state.longitude}
+              obterLocalizacao={this.obterLocalizacao}
+             />
             }
           </div>
         </div>
